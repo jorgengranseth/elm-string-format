@@ -1,8 +1,8 @@
 # String.Format
 
 `String.Format` exposes simple helpers for `String` interpolation to help you
-avoid difficult-to-read String concatenation. Both named and unnamed
-placeholders are supported.
+avoid difficult-to-read concatenation.
+Both named and unnamed placeholders are supported.
 
 ```elm
 import String.Format

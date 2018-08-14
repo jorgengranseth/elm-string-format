@@ -57,10 +57,10 @@ namedValue name value =
 {-| Interpolate the next unnamed placeholder
 
     "{{ }} comes before {{ }}"
-        |> String.Format.value "2"
-        |> String.Format.value "1"
+        |> String.Format.value "dinner"
+        |> String.Format.value "dessert"
 
-    -- 2 comes before 1
+    -- "dinner comes before dessert"
 
 -}
 value : String -> String -> String
