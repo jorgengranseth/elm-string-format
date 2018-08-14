@@ -1,12 +1,33 @@
 module String.Format
     exposing
-        ( placeholder
+        ( namedValue
         , value
         )
 
-{-| A simple module to interpolate values into `String`s
+{-| Simple, pipable helpers to interpolate `String` values.
 
-@docs placeholder
+You can either specify placeholder names or push values into
+the next empty placeholder.
+
+    """
+    {{ named }} is replaced everywhere {{ named }},
+    whereas empty placeholders: {{ }} and {{ }},
+    act as unique slots for the value function
+    """
+        |> String.Format.value "first"
+        |> String.Format.namedValue "named" "yay!"
+        |> String.Format.value "second"
+
+    -- """
+    -- yay! is replaced everywhere yay!,
+    -- whereas empty placeholders: first and second,
+    -- act as unique slots for the value function
+    -- """
+
+
+# Formatters
+
+@docs namedValue
 @docs value
 
 -}
@@ -17,40 +38,31 @@ import Regex
 {-| Interpolate a named placeholder
 
     "What happened to the {{ food }}? Maybe {{ person }} ate it?"
-        |> String.Format.placeholder "food" "cake"
-        |> String.Format.placeholder "person" "Joe"
+        |> String.Format.namedValue "food" "cake"
+        |> String.Format.namedValue "person" "Joe"
 
     -- "What happened to the cake? Maybe Joe ate it?"
 
-    "{{ person }} is {{ age }} years old."
-        |> String.Format.placeholder "person" "Michael"
-        |> String.Format.placeholder "age" 12
-
-    -- "Michael is 12 years old"
-
 -}
-placeholder : String -> a -> String -> String
-placeholder name value =
+namedValue : String -> String -> String -> String
+namedValue name value =
     let
-        name_ =
-            "{{\\s*" ++ name ++ "\\s*}}"
-
-        value_ =
-            stringify value
+        placeholder =
+            Regex.regex <| "{{\\s*" ++ name ++ "\\s*}}"
     in
-        Regex.replace Regex.All (Regex.regex name_) (\_ -> value_)
+        Regex.replace Regex.All placeholder (\_ -> value)
 
 
 {-| Interpolate the next unnamed placeholder
 
-    "I have concluded that {{ }} is greater than {{ }}"
-        |> String.Format.value 2
-        |> String.Format.value 1
+    "{{ }} comes before {{ }}"
+        |> String.Format.value "2"
+        |> String.Format.value "1"
 
-    -- I have concluded that 2 is greater than 1
+    -- 2 comes before 1
 
 -}
-value : a -> String -> String
+value : String -> String -> String
 value val =
     let
         firstOccurrence =
@@ -58,22 +70,5 @@ value val =
 
         emptyBraces =
             Regex.regex "{{\\s*}}"
-
-        val_ =
-            stringify val
     in
-        Regex.replace firstOccurrence emptyBraces (\_ -> val_)
-
-
-stringify : a -> String
-stringify value =
-    let
-        string_value =
-            toString value
-    in
-        if String.startsWith "\"" string_value then
-            string_value
-                |> String.dropLeft 1
-                |> String.dropRight 1
-        else
-            string_value
+        Regex.replace firstOccurrence emptyBraces (\_ -> val)
