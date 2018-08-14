@@ -4,7 +4,8 @@ module String.Format
         , value
         )
 
-{-| Simple, pipable helpers to interpolate `String` values.
+{-| Simple, pipable helpers to avoid difficult-to-read String concatenation
+by interpolating `String` values.
 
 You can either specify placeholder names or push values into
 the next empty placeholder.
