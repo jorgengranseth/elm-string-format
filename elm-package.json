@@ -1,7 +1,7 @@
 {
     "version": "1.0.0",
     "summary": "Avoid ugly String concatenation with pipable interpolation helpers",
-    "repository": "https://github.com/user/project.git",
+    "repository": "https://github.com/jorgengranseth/elm-string-format.git",
     "license": "BSD3",
     "source-directories": [
         "src"
