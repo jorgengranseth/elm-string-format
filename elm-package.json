@@ -1,6 +1,6 @@
 {
     "version": "1.0.0",
-    "summary": "simple string formatting for Elm",
+    "summary": "Avoid ugly String concatenation with pipable interpolation helpers",
     "repository": "https://github.com/user/project.git",
     "license": "BSD3",
     "source-directories": [
