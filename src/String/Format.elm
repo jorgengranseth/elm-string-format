@@ -46,12 +46,12 @@ import Regex
 
 -}
 namedValue : String -> String -> String -> String
-namedValue name value =
+namedValue name val =
     let
         placeholder =
-            Regex.regex <| "{{\\s*" ++ name ++ "\\s*}}"
+            regex <| "{{\\s*" ++ name ++ "\\s*}}"
     in
-        Regex.replace Regex.All placeholder (\_ -> value)
+        Regex.replace placeholder (\_ -> val)
 
 
 {-| Interpolate the next unnamed placeholder
@@ -66,10 +66,13 @@ namedValue name value =
 value : String -> String -> String
 value val =
     let
-        firstOccurrence =
-            Regex.AtMost 1
-
         emptyBraces =
-            Regex.regex "{{\\s*}}"
+            regex "{{\\s*}}"
     in
-        Regex.replace firstOccurrence emptyBraces (\_ -> val)
+        Regex.replaceAtMost 1 emptyBraces (\_ -> val)
+
+
+regex : String -> Regex.Regex
+regex =
+    Regex.fromString
+        >> Maybe.withDefault Regex.never
